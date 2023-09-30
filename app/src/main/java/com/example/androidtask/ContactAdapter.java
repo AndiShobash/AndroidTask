@@ -111,9 +111,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactH
                 @Override
                 public void onClick(View view) {
                     ContactAdapter.viewModel.setSelectedItem(getAdapterPosition());
-                    main_contact_list.call_app_contact_full_info(contactsList.get(getAdapterPosition()));
-
-
+                    main_contact_list.call_app_contact_full_info(contactsList.get(selected_item));
                 }
             });
         }

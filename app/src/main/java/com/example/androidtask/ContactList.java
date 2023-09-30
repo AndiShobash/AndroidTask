@@ -28,7 +28,7 @@ public class ContactList extends OptionsMenu {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
         contactViewModel = new ViewModelProvider(this, (ViewModelProvider.Factory) new ViewModelProvider.AndroidViewModelFactory(getApplication())).get(ContactViewModel.class);
-        ContactAdapter adapter = new ContactAdapter(this,ContactList.this,contactViewModel);
+        ContactAdapter adapter = new ContactAdapter(ContactList.this,this,contactViewModel);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getApplication()));
 
@@ -53,10 +53,10 @@ public class ContactList extends OptionsMenu {
         Intent intent = new Intent(ContactList.this,ContactFullInfo.class);
         intent.putExtra("firstname",contact.getFirst_name());
         intent.putExtra("lastname",contact.getLast_name());
-        intent.putExtra("email",contact.getFirst_name());
-        intent.putExtra("mobile",contact.getLast_name());
-        intent.putExtra("address",contact.getFirst_name());
-        intent.putExtra("gender",contact.getLast_name());
+        intent.putExtra("email",contact.getEmail());
+        intent.putExtra("mobile",contact.getMobile_number());
+        intent.putExtra("address",contact.getAddress());
+        intent.putExtra("gender",contact.getGender());
         startActivity(intent);
     }
     @Override
