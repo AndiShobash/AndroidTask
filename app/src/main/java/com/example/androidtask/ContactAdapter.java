@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LifecycleOwner;
@@ -24,12 +25,13 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactH
     private static ContactViewModel viewModel;
     public int selected_item;
 
-    String [] test_names;
+    private static ContactList main_contact_list;
+    String[] test_names;
 
-    public ContactAdapter(Context context, ContactViewModel viewModel) {
+    public ContactAdapter(Context context, ContactList contactList, ContactViewModel viewModel) {
         ContactAdapter.viewModel = viewModel;
-        this.context=context;
-        this.test_names=test_names;
+        this.context = context;
+        this.main_contact_list = contactList;
 
         /************************************************ LiveData to see which position selected **********************************************************/
         ContactAdapter.viewModel.getSelectedContactMutableLiveData().observe((LifecycleOwner) context, new Observer<Integer>() {
@@ -65,13 +67,11 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactH
     @Override
     public void onBindViewHolder(@NonNull ContactHolder holder, int position) {
         String full_name;
-        Contacts current=contactsList.get(position);
-        String name = test_names[position];
-        full_name=current.getFirst_name()+" "+current.getLast_name();
-        holder.first_name_last_name.setText(name);
+        Contacts current = contactsList.get(position);
+        full_name = current.getFirst_name() + " " + current.getLast_name();
+        holder.first_name_last_name.setText(full_name);
         holder.type.setText("Number: ");
-        holder.type_info.setText(current.getMobile_number());
-        //holder.type_info.setText("0526487648");
+        holder.type_info.setText(String.valueOf(current.getMobile_number()));
 
     }
 
@@ -93,6 +93,29 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactH
             delete_btn = contactview.findViewById(R.id.image_delete);
             type = contactview.findViewById(R.id.text_view_type);
             type_info = contactview.findViewById(R.id.type_info);
+
+            delete_btn.setOnClickListener(new View.OnClickListener() {
+                @SuppressLint("NotifyDataSetChanged")
+                @Override
+                public void onClick(View view) {
+                    int pos = getAdapterPosition();
+                    if (pos != RecyclerView.NO_POSITION) {
+                        viewModel.remove_contact(pos);
+                    }
+                    Toast.makeText(context, "deleted successfully", Toast.LENGTH_SHORT).show();
+                    notifyDataSetChanged();
+                }
+            });
+
+            contactview.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ContactAdapter.viewModel.setSelectedItem(getAdapterPosition());
+                    main_contact_list.call_app_contact_full_info(contactsList.get(getAdapterPosition()));
+
+
+                }
+            });
         }
     }
 }

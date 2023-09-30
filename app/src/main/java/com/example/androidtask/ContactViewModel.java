@@ -20,7 +20,6 @@ public class ContactViewModel extends AndroidViewModel {
     MutableLiveData<List<Contacts>> ContactsLiveData;
     MutableLiveData<Integer> SelectedContact;
 
-    public int SelectedContactPos;
 
     public ContactViewModel(@NonNull Application application) {
         super(application);
@@ -38,8 +37,17 @@ public class ContactViewModel extends AndroidViewModel {
         return ContactsLiveData;
     }
 
+    public void remove_contact(int position)
+    {
+        db.getContactDao().delete(ContactsList.get(position));
+        ContactsList.remove(position);
+        ContactsLiveData.setValue(ContactsList);
+    }
+
     public void setSelectedOrder(Integer noPosition) {
-        SelectedContactPos = noPosition;
-        SelectedContact.setValue(SelectedContactPos);
+        SelectedContact.setValue(noPosition);
+    }
+    public void setSelectedItem(Integer Item){
+        SelectedContact.setValue(Item);
     }
 }

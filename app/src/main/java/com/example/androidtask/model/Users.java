@@ -20,7 +20,7 @@ public class Users {
     String password;
 
     @ColumnInfo(name = "mobile_number")//this is mobile_number
-    int mobile_number;
+    String mobile_number;
 
     @ColumnInfo(name = "address")//this is address
     String address;
@@ -32,7 +32,7 @@ public class Users {
 
     }
 
-    public Users(String first_name, String last_name, String email, String password, int mobile_number, String address, String gender) {
+    public Users(String first_name, String last_name, String email, String password, String mobile_number, String address, String gender) {
         this.first_name = first_name;
         this.last_name = last_name;
         this.email = email;
@@ -82,11 +82,11 @@ public class Users {
         this.password = password;
     }
 
-    public int getMobile_number() {
+    public String getMobile_number() {
         return mobile_number;
     }
 
-    public void setMobile_number(int mobile_number) {
+    public void setMobile_number(String mobile_number) {
         this.mobile_number = mobile_number;
     }
 

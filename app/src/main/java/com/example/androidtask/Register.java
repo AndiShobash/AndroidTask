@@ -19,7 +19,7 @@ import com.example.androidtask.model.UsersDB;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Register extends OptionsMenu {
+public class Register extends AppCompatActivity {
     private RadioButton gender_radio;
 
     @Override
@@ -44,7 +44,7 @@ public class Register extends OptionsMenu {
                 String last_name = etn_last_name.getText().toString().trim();
                 String email = etn_email.getText().toString().trim();
                 String password = etn_password.getText().toString().trim();
-                int mobile = Integer.parseInt(etn_mobile.getText().toString().trim());
+                String mobile = etn_mobile.getText().toString().trim();
                 String address = etn_address.getText().toString().trim();
                 int selected_id = radioGroup.getCheckedRadioButtonId();
                 if (selected_id != -1) {
@@ -72,8 +72,5 @@ public class Register extends OptionsMenu {
 
             }
         });
-    }
-    public boolean onCreateOptionsMenu(Menu menu) {
-        return super.onCreateOptionsMenu(menu);
     }
 }

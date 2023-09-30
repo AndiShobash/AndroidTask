@@ -18,7 +18,7 @@
 
         <TextView
             android:id="@+id/text_view_name"
-            android:layout_width="80dp"
+            android:layout_width="118dp"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_marginLeft="10dp"
@@ -33,12 +33,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_marginLeft="22dp"
+            android:layout_marginLeft="25dp"
             android:layout_marginBottom="12dp"
             android:layout_toRightOf="@+id/text_view_name"
             android:text="type:"
             android:textSize="15dp"
-            android:textStyle="italic" />
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/type_info"

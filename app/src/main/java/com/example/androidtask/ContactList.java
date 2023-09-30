@@ -1,5 +1,6 @@
 package com.example.androidtask;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 
@@ -9,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.androidtask.Menu.OptionsMenu;
+import com.example.androidtask.model.Contacts;
 
 import java.util.List;
 
@@ -26,7 +28,7 @@ public class ContactList extends OptionsMenu {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
         contactViewModel = new ViewModelProvider(this, (ViewModelProvider.Factory) new ViewModelProvider.AndroidViewModelFactory(getApplication())).get(ContactViewModel.class);
-        ContactAdapter adapter = new ContactAdapter(this,contactViewModel);
+        ContactAdapter adapter = new ContactAdapter(this,ContactList.this,contactViewModel);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getApplication()));
 
@@ -45,5 +47,21 @@ public class ContactList extends OptionsMenu {
 
     public static String getUserEmail(){
         return user_email;
+    }
+
+    public void call_app_contact_full_info(Contacts contact) {
+        Intent intent = new Intent(ContactList.this,ContactFullInfo.class);
+        intent.putExtra("firstname",contact.getFirst_name());
+        intent.putExtra("lastname",contact.getLast_name());
+        intent.putExtra("email",contact.getFirst_name());
+        intent.putExtra("mobile",contact.getLast_name());
+        intent.putExtra("address",contact.getFirst_name());
+        intent.putExtra("gender",contact.getLast_name());
+        startActivity(intent);
+    }
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(ContactList.this, MainActivity.class);
+        startActivity(intent);
     }
 }

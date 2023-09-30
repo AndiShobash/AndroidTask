@@ -21,7 +21,7 @@ public class Contacts {
     String email;
 
     @ColumnInfo(name = "mobile_number")//this is mobile_number
-    int mobile_number;
+    String mobile_number;
 
     @ColumnInfo(name = "address")//this is address
     String address;
@@ -29,7 +29,7 @@ public class Contacts {
     @ColumnInfo(name = "gender")//this is gender
     String gender;
 
-    public Contacts(@NonNull String user_email, String first_name, String last_name, String email, int mobile_number, String address, String gender) {
+    public Contacts(@NonNull String user_email, String first_name, String last_name, String email, String mobile_number, String address, String gender) {
         this.user_email = user_email;
         this.first_name = first_name;
         this.last_name = last_name;
@@ -76,11 +76,19 @@ public class Contacts {
         this.email = email;
     }
 
-    public int getMobile_number() {
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getMobile_number() {
         return mobile_number;
     }
 
-    public void setMobile_number(int mobile_number) {
+    public void setMobile_number(String mobile_number) {
         this.mobile_number = mobile_number;
     }
 

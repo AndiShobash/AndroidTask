@@ -1,7 +1,12 @@
 package com.example.androidtask;
 
+import android.app.ActivityManager;
+import android.app.Service;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
@@ -17,7 +22,7 @@ import com.example.androidtask.model.UsersDB;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends OptionsMenu {
+public class MainActivity extends AppCompatActivity {
 
     private List<Users> users_List = new ArrayList<>();
 
@@ -62,9 +67,15 @@ public class MainActivity extends OptionsMenu {
         });
     }
 
-    public boolean onCreateOptionsMenu(Menu menu) {
-        return super.onCreateOptionsMenu(menu);
+    @Override
+    public void onBackPressed() {
+        Intent serviceIntent = new Intent(MainActivity.this.getApplicationContext(), Service.class);
+        stopService(serviceIntent);// Stops the Service before exiting
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_HOME);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        System.exit(1);
     }
-
-
 }
