@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.androidtask.ContactAdd;
 import com.example.androidtask.ContactList;
+import com.example.androidtask.MainActivity;
 import com.example.androidtask.R;
 
 
@@ -30,6 +31,12 @@ public class OptionsMenu extends AppCompatActivity {
         // Handle item selection
         if (item.getItemId() == R.id.add_contact) {//if selected orders the it will go to see the orders in the db
             add_new_contact();
+        }
+        else if (item.getItemId()== R.id.Settings){
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(android.R.id.content ,new ContactList.MyPreferences()).addToBackStack(null)
+                    .commit();
         }
 
 

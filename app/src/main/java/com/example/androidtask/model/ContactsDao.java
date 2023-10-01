@@ -19,6 +19,10 @@ public interface ContactsDao {
 
     @Query("SELECT * FROM Contacts")
     List<Contacts> getAllContacts();
+
+    @Query("SELECT * FROM Contacts WHERE user_email = :email")
+    List<Contacts> getAllUserContacts(String email);
+
 }
 
 

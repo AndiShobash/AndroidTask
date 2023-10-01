@@ -2,6 +2,7 @@ package com.example.androidtask;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.androidtask.model.Contacts;
@@ -26,7 +28,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactH
     public int selected_item;
 
     private static ContactList main_contact_list;
-    String[] test_names;
+    SharedPreferences app_preferences;
 
     public ContactAdapter(Context context, ContactList contactList, ContactViewModel viewModel) {
         ContactAdapter.viewModel = viewModel;
@@ -70,8 +72,28 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactH
         Contacts current = contactsList.get(position);
         full_name = current.getFirst_name() + " " + current.getLast_name();
         holder.first_name_last_name.setText(full_name);
-        holder.type.setText("Number: ");
-        holder.type_info.setText(String.valueOf(current.getMobile_number()));
+        app_preferences = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
+        boolean pref_mobile = app_preferences.getBoolean("MobileNumber", false);
+        boolean pref_email = app_preferences.getBoolean("Email", false);
+        boolean pref_address = app_preferences.getBoolean("Address", false);
+        boolean pref_gender = app_preferences.getBoolean("Gender", false);
+        if (pref_mobile){
+            holder.type.setText("Mobile:");
+            holder.type_info.setText(String.valueOf(current.getMobile_number()));
+        }
+        if (pref_email){
+            holder.type.setText("Email:");
+            holder.type_info.setText(String.valueOf(current.getEmail()));
+        }
+        if (pref_address){
+            holder.type.setText("Address:");
+            holder.type_info.setText(String.valueOf(current.getAddress()));
+        }
+        if (pref_gender){
+            holder.type.setText("Gender:");
+            holder.type_info.setText(String.valueOf(current.getGender()));
+        }
+
 
     }
 

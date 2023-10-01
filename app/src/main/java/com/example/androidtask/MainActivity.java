@@ -1,13 +1,8 @@
 package com.example.androidtask;
 
-import android.app.ActivityManager;
 import android.app.Service;
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,28 +10,43 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.androidtask.Menu.OptionsMenu;
+import com.example.androidtask.model.ContactsDB;
+import com.example.androidtask.model.RequesetResponse;
 import com.example.androidtask.model.Users;
 import com.example.androidtask.model.UsersDB;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.http.GET;
+import retrofit2.http.Query;
+
 public class MainActivity extends AppCompatActivity {
+
+    interface RequestUser {
+        @GET("/")
+        Call<RequesetResponse> getGender(@Query("name") String name);
+    }
 
     private List<Users> users_List = new ArrayList<>();
 
     UsersDB db;
+    static ContactsDB data_base;
+
+    static String gender;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
+
         EditText etn_email = (EditText) findViewById(R.id.email);
         EditText etn_password = (EditText) findViewById(R.id.password);
         Button btn_register = (Button) findViewById(R.id.register_btn);
         Button btn_login = (Button) findViewById(R.id.login_btn);
         db = UsersDB.getInstance(MainActivity.this);
+        data_base = ContactsDB.getInstance(MainActivity.this);
 
         btn_login.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,7 +76,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
     @Override
     public void onBackPressed() {
         Intent serviceIntent = new Intent(MainActivity.this.getApplicationContext(), Service.class);
@@ -78,4 +87,6 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
         System.exit(1);
     }
+
+
 }
