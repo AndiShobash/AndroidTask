@@ -17,12 +17,6 @@ import com.example.androidtask.model.UsersDB;
 /************************************************ This is where we show all the selected contact's information **********************************************************/
 public class ContactFullInfo extends AppCompatActivity {
     private int user_id;
-    private String first_name;
-    private String last_name;
-    private String email;
-    private String mobile;
-    private String address;
-    private String gender;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

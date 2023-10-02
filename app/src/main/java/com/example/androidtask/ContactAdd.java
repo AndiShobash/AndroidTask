@@ -39,10 +39,8 @@ public class ContactAdd extends AppCompatActivity {
         Call<RequesetResponse> getGender(@Query("name") String name);
     }
 
-    private RadioButton gender_radio;
     private String user_email;
 
-    private String gender;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

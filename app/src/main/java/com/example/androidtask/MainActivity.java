@@ -26,7 +26,6 @@ public class MainActivity extends AppCompatActivity {
     UsersDB db;
     static ContactsDB data_base;
 
-    static String gender;
 
     private boolean check_login_correct = false;
 
