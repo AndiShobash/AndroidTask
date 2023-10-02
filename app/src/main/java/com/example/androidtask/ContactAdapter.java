@@ -21,6 +21,7 @@ import com.example.androidtask.model.Contacts;
 import java.util.ArrayList;
 import java.util.List;
 
+/************************************************ The adapter fot the RecyclerView**********************************************************/
 public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactHolder> {
     private List<Contacts> contactsList = new ArrayList<>();
     Context context;
@@ -45,7 +46,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactH
             }
         });
 
-        /************************************************ LiveData Updates the orders list if anything changes **********************************************************/
+        /************************************************ LiveData Updates the contacts list if anything changes **********************************************************/
         ContactAdapter.viewModel.getContactsLiveData().observe((LifecycleOwner) context, new Observer<List<Contacts>>() {
             @SuppressLint("NotifyDataSetChanged")
             @Override
@@ -65,6 +66,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactH
         return new ContactHolder(contactView);
     }
 
+    //Display the contacts information in the list with the setting which will displayed
     @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull ContactHolder holder, int position) {
@@ -72,7 +74,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactH
         Contacts current = contactsList.get(position);
         full_name = current.getFirst_name() + " " + current.getLast_name();
         holder.first_name_last_name.setText(full_name);
-        app_preferences = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
+        app_preferences = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());//Get the preferences to know that to display
         boolean pref_mobile = app_preferences.getBoolean("MobileNumber", false);
         boolean pref_email = app_preferences.getBoolean("Email", false);
         boolean pref_address = app_preferences.getBoolean("Address", false);
@@ -116,6 +118,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactH
             type = contactview.findViewById(R.id.text_view_type);
             type_info = contactview.findViewById(R.id.type_info);
 
+            //The delete button has been clicked and now will delete the contact
             delete_btn.setOnClickListener(new View.OnClickListener() {
                 @SuppressLint("NotifyDataSetChanged")
                 @Override
@@ -130,6 +133,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactH
             });
 
             contactview.setOnClickListener(new View.OnClickListener() {
+                //Clicked at the contact to see the full information about the contact
                 @Override
                 public void onClick(View view) {
                     ContactAdapter.viewModel.setSelectedItem(getAdapterPosition());

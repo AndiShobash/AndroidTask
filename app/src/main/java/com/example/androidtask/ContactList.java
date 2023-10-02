@@ -21,6 +21,7 @@ import com.example.androidtask.model.Contacts;
 
 import java.util.List;
 
+/************************************************ This is where all the user's contacts will display**********************************************************/
 public class ContactList extends OptionsMenu {
 
     private static String user_email;
@@ -40,6 +41,7 @@ public class ContactList extends OptionsMenu {
             user_email = extras.getString("email");
             //The key argument here must match that used in the other activity
         }
+        //Activate the RecyclerView and the ViewModel
         RecyclerView recyclerView = findViewById(R.id.recycler_view_contacts);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
@@ -50,14 +52,17 @@ public class ContactList extends OptionsMenu {
 
     }
 
+    //Creates the Options Menu
     public boolean onCreateOptionsMenu(Menu menu) {
         return super.onCreateOptionsMenu(menu);
     }
 
+    //A static function to return the user's email who logged in
     public static String getUserEmail() {
         return user_email;
     }
 
+    //A function calls to the ContactFullInfo to watch the full info of the contact and past the contact information
     public void call_app_contact_full_info(Contacts contact) {
         Intent intent = new Intent(ContactList.this, ContactFullInfo.class);
         intent.putExtra("id", contact.getId());
@@ -70,6 +75,7 @@ public class ContactList extends OptionsMenu {
         startActivity(intent);
     }
 
+    //When pressed back in the fragment of the Preference it closes the fragment else going back to the login
     @Override
     public void onBackPressed() {
         if (in_fragment) {
@@ -83,7 +89,7 @@ public class ContactList extends OptionsMenu {
         }
     }
 
-
+    /************************************************ Preference to decide what to display in the contact list **********************************************************/
     public static class MyPreferences extends PreferenceFragmentCompat {
         SwitchPreference mobile;
         SwitchPreference email;
@@ -105,7 +111,8 @@ public class ContactList extends OptionsMenu {
             view.setBackgroundColor(Color.WHITE);
             super.onViewCreated(view, savedInstanceState);
         }
-
+        //If one of the Preferences is clicked than it disable the others and
+        // the one is picked displayed in the contact list
         public boolean onPreferenceTreeClick(Preference preference) {
             if (preference.getKey().equals("Email")) {
                 mobile.setChecked(false);
@@ -117,19 +124,19 @@ public class ContactList extends OptionsMenu {
                 email.setChecked(false);
                 address.setChecked(false);
                 gender.setChecked(false);
-                return true; // Return true to indicate that you've handled the click
+                return true;
             }
             if (preference.getKey().equals("Address")) {
                 mobile.setChecked(false);
                 email.setChecked(false);
                 gender.setChecked(false);
-                return true; // Return true to indicate that you've handled the click
+                return true;
             }
             if (preference.getKey().equals("Gender")) {
                 mobile.setChecked(false);
                 address.setChecked(false);
                 email.setChecked(false);
-                return true; // Return true to indicate that you've handled the click
+                return true;
             }
             return super.onPreferenceTreeClick(preference);
         }

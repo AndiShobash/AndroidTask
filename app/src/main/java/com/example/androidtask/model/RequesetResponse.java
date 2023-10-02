@@ -2,6 +2,7 @@ package com.example.androidtask.model;
 
 import com.google.gson.annotations.SerializedName;
 
+/************************************************ This is for the api request to get the data **********************************************************/
 public class RequesetResponse {
     @SerializedName("count")
     private String count;

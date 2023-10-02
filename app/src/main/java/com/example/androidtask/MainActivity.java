@@ -18,23 +18,17 @@ import com.example.androidtask.model.UsersDB;
 import java.util.ArrayList;
 import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.http.GET;
-import retrofit2.http.Query;
+/************************************************ Login Page **********************************************************/
 
 public class MainActivity extends AppCompatActivity {
-
-    interface RequestUser {
-        @GET("/")
-        Call<RequesetResponse> getGender(@Query("name") String name);
-    }
-
     private List<Users> users_List = new ArrayList<>();
 
     UsersDB db;
     static ContactsDB data_base;
 
     static String gender;
+
+    private boolean check_login_correct = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,26 +42,36 @@ public class MainActivity extends AppCompatActivity {
         db = UsersDB.getInstance(MainActivity.this);
         data_base = ContactsDB.getInstance(MainActivity.this);
 
+/************************************************ Login Button Clicked **********************************************************/
         btn_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String email = etn_email.getText().toString().trim();
                 String password = etn_password.getText().toString().trim();
-                if (email.isEmpty() || password.isEmpty()) {
+                if (email.isEmpty() || password.isEmpty()) { //Checks if the email and password field are empty
                     Toast.makeText(MainActivity.this, "Please Enter Email and Password", Toast.LENGTH_SHORT).show();
                 } else {
+                    // Go over all the users to see if a user is exist
                     users_List = db.getUserDao().getAllUsers();
                     for (Users user : users_List) {
+                        // If exists then go in to see contacts
                         if (email.equals(user.getEmail()) && password.equals(user.getPassword())) {
+                            //Go to the ContactList Activity and also pass to him the user email information
+                            check_login_correct = true;
                             Intent intent = new Intent(MainActivity.this, ContactList.class);
                             intent.putExtra("email", user.getEmail());
                             startActivity(intent);
                         }
                     }
+                    if (!check_login_correct) {
+                        Toast.makeText(MainActivity.this, "Email or Password is incorrect", Toast.LENGTH_SHORT).show();
+                    }
 
                 }
             }
         });
+
+/************************************************ SignUp Button Clicked **********************************************************/
         btn_register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -76,10 +80,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+    /************************************************ Exists the app after clicking the back button **********************************************************/
     @Override
     public void onBackPressed() {
         Intent serviceIntent = new Intent(MainActivity.this.getApplicationContext(), Service.class);
-        stopService(serviceIntent);// Stops the Service before exiting
         Intent intent = new Intent(Intent.ACTION_MAIN);
         intent.addCategory(Intent.CATEGORY_HOME);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);

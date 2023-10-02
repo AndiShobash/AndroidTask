@@ -6,6 +6,7 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
+/************************************************ Creating the database for Users**********************************************************/
 @Database(entities = {Users.class},version = 1)
 public abstract class UsersDB extends RoomDatabase {
     private static UsersDB instance;

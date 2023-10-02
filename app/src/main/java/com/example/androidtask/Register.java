@@ -18,7 +18,9 @@ import com.example.androidtask.model.UsersDB;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
+/************************************************ Register Page **********************************************************/
 public class Register extends AppCompatActivity {
     private RadioButton gender_radio;
 
@@ -37,6 +39,7 @@ public class Register extends AppCompatActivity {
         UsersDB db = UsersDB.getInstance(Register.this);
         radioGroup.clearCheck();
 
+/************************************************ Register Button Clicked **********************************************************/
         btn_register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -50,27 +53,58 @@ public class Register extends AppCompatActivity {
                 if (selected_id != -1) {
                     gender_radio = findViewById(selected_id);
                 }
-                List<Users> users_List = db.getUserDao().getAllUsers();
-                boolean email_exists = false;
-                for (Users user : users_List) {
-                    if (email.equals(user.getEmail())) {
-                        email_exists = true;
-                        break;
-                    }
+
+
+                //Check if all the fields are not empty
+                if (first_name.isEmpty() || last_name.isEmpty() || email.isEmpty() || password.isEmpty() || mobile.isEmpty() || address.isEmpty() || selected_id == -1) {
+                    Toast.makeText(getApplicationContext(), "Please fill all the fields", Toast.LENGTH_SHORT).show();
                 }
-                if (email_exists) {
-                    Toast.makeText(getApplicationContext(), "User exists with the email", Toast.LENGTH_SHORT).show();
-                    email_exists = false;
-                } else {
-                    String gender = gender_radio.getText().toString().trim();
-                    Users user = new Users(first_name, last_name, email, password, mobile, address, gender);
-                    db.getUserDao().insert(user);
-                    Toast.makeText(getApplicationContext(), "Registered Successfully ", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(Register.this, MainActivity.class);
-                    startActivity(intent);
+                else if(!isValid(email)){
+                    Toast.makeText(getApplicationContext(), "Enter a valid email", Toast.LENGTH_SHORT).show();
+                }
+                else if (mobile.length()!=10) {
+                    Toast.makeText(getApplicationContext(), "Enter a valid mobile number", Toast.LENGTH_SHORT).show();
+
                 }
 
+                //Check if a user is exist with the same email
+                else {
+                    List<Users> users_List = db.getUserDao().getAllUsers();
+                    boolean email_exists = false;
+                    for (Users user : users_List) {
+                        if (email.equals(user.getEmail())) {
+                            email_exists = true;
+                            break;
+                        }
+                    }
+                    if (email_exists) {
+                        Toast.makeText(getApplicationContext(), "User exists with the email", Toast.LENGTH_SHORT).show();
+                        email_exists = false;
+                    } else {
+                        String gender = gender_radio.getText().toString().trim();
+                        Users user = new Users(first_name, last_name, email, password, mobile, address, gender);
+                        db.getUserDao().insert(user);//Save the user
+                        Toast.makeText(getApplicationContext(), "Registered Successfully ", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(Register.this, MainActivity.class);//Go back to the login page
+                        startActivity(intent);
+                    }
+
+                }
             }
         });
+
+    }
+    //checks if the email format is valid or not
+    public static boolean isValid(String email)
+    {
+        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\."+
+                "[a-zA-Z0-9_+&*-]+)*@" +
+                "(?:[a-zA-Z0-9-]+\\.)+[a-z" +
+                "A-Z]{2,7}$";
+
+        Pattern pat = Pattern.compile(emailRegex);
+        if (email == null)
+            return false;
+        return pat.matcher(email).matches();
     }
 }

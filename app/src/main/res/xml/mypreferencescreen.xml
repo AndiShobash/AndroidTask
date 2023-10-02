@@ -8,7 +8,7 @@
 
         <PreferenceCategory android:title="Preference category">
                 <SwitchPreference
-                    android:defaultValue="false"
+                    android:defaultValue="true"
                     android:key="MobileNumber"
                     android:title="Show Mobile Number" />
                 <SwitchPreference

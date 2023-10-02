@@ -11,58 +11,63 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.androidtask.Menu.OptionsMenu;
 import com.example.androidtask.model.Contacts;
 import com.example.androidtask.model.ContactsDB;
 
-public class ContactEdit extends OptionsMenu {
+import java.util.regex.Pattern;
+
+/************************************************ This is the where the user can edit the contact's information**********************************************************/
+public class ContactEdit extends AppCompatActivity {
     private RadioButton gender_radio;
 
     private int user_id;
     private String user_email;
-    private String contact_first_name;
-    private String contact_last_name;
-    private String contact_email;
-    private String contact_mobile;
-    private String contact_address;
-    private String contact_gender;
+    private EditText edt_first_name;
+    private EditText edt_last_name;
+    private EditText edt_email;
+    private EditText edt_mobile;
+    private EditText edt_address;
+    private  RadioGroup radioGroup;
+    private ContactsDB db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.contact_edit);
-        EditText edt_first_name = findViewById(R.id.first_name_edit);
-        EditText edt_last_name = findViewById(R.id.last_name_edit);
-        EditText edt_email = findViewById(R.id.email_edit);
-        EditText edt_mobile = findViewById(R.id.mobile_edit);
-        EditText edt_address = findViewById(R.id.address_edit);
-        RadioGroup radioGroup = findViewById(R.id.radio_group_edit);
+         edt_first_name = findViewById(R.id.first_name_edit);
+         edt_last_name = findViewById(R.id.last_name_edit);
+         edt_email = findViewById(R.id.email_edit);
+         edt_mobile = findViewById(R.id.mobile_edit);
+         edt_address = findViewById(R.id.address_edit);
+         radioGroup = findViewById(R.id.radio_group_edit);
         Button btn_edit_contact = findViewById(R.id.edit_btn);
-        ContactsDB db = ContactsDB.getInstance(ContactEdit.this);
+        db = ContactsDB.getInstance(ContactEdit.this);
         radioGroup.clearCheck();
-        Bundle extras = getIntent().getExtras();// Using the bundle we can get the sent items we want
+        Bundle extras = getIntent().getExtras();// Using the bundle we can get the id of the contact
         if (extras != null) {
 
             user_email = ContactList.getUserEmail();
             user_id = extras.getInt("id");
-            contact_first_name = extras.getString("firstname");
-            contact_last_name = extras.getString("lastname");
-            contact_email = extras.getString("email");
-            contact_mobile = extras.getString("mobile");
-            contact_address = extras.getString("address");
-            contact_gender = extras.getString("gender");
             //The key argument here must match that used in the other activity
         }
-        edt_first_name.setText(contact_first_name);
-        edt_last_name.setText(contact_last_name);
-        edt_email.setText(contact_email);
-        edt_mobile.setText(contact_mobile);
-        edt_address.setText(contact_address);
-        if (contact_gender.equals("male")) {
+        Contacts contact = new Contacts();
+        contact = db.getContactDao().getContact(user_id);
+        edt_first_name.setText(contact.getFirst_name());
+        edt_last_name.setText(contact.getLast_name());
+        edt_email.setText(contact.getEmail());
+        edt_mobile.setText(contact.getMobile_number());
+        edt_address.setText(contact.getAddress());
+        if (contact.getGender().equals("male")) {
             radioGroup.check(R.id.male_edit);
         } else {
             radioGroup.check(R.id.female_edit);
         }
+
+        //edit button has been clicked and will edit the database
         btn_edit_contact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -75,21 +80,37 @@ public class ContactEdit extends OptionsMenu {
                 if (selected_id != -1) {
                     gender_radio = findViewById(selected_id);
                 }
-                String gender = gender_radio.getText().toString().trim();
-                Contacts contacts = new Contacts(user_email, first_name, last_name, email, mobile, address, gender);
-                contacts.setId(user_id);
-                db.getContactDao().update(contacts);
-                Toast.makeText(getApplicationContext(), "Edited Successfully ", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(ContactEdit.this, ContactFullInfo.class);
-                intent.putExtra("id",contacts.getId());
-                intent.putExtra("firstname",contacts.getFirst_name());
-                intent.putExtra("lastname",contacts.getLast_name());
-                intent.putExtra("email",contacts.getEmail());
-                intent.putExtra("mobile",contacts.getMobile_number());
-                intent.putExtra("address",contacts.getAddress());
-                intent.putExtra("gender",contacts.getGender());
-                startActivity(intent);
+                //Check if all the fields are not empty
+                if (first_name.isEmpty() || last_name.isEmpty() || email.isEmpty() || mobile.isEmpty() || address.isEmpty() || selected_id == -1) {
+                    Toast.makeText(getApplicationContext(), "Please fill all the fields", Toast.LENGTH_SHORT).show();
+                } else if (!isValid(email)) {
+                    Toast.makeText(getApplicationContext(), "Enter a valid email", Toast.LENGTH_SHORT).show();
+                } else if (mobile.length() != 10) {
+                    Toast.makeText(getApplicationContext(), "Enter a valid mobile number", Toast.LENGTH_SHORT).show();
+
+                } else {
+                    String gender = gender_radio.getText().toString().trim();
+                    Contacts contacts = new Contacts(user_email, first_name, last_name, email, mobile, address, gender);
+                    contacts.setId(user_id);
+                    db.getContactDao().update(contacts);
+                    Toast.makeText(getApplicationContext(), "Edited Successfully ", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(ContactEdit.this, ContactFullInfo.class);//going back to the contact full information and giving him the id of the contact
+                    intent.putExtra("id", contacts.getId());
+                    startActivity(intent);
+                }
             }
         });
+    }
+    public static boolean isValid(String email)
+    {
+        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\."+
+                "[a-zA-Z0-9_+&*-]+)*@" +
+                "(?:[a-zA-Z0-9-]+\\.)+[a-z" +
+                "A-Z]{2,7}$";
+
+        Pattern pat = Pattern.compile(emailRegex);
+        if (email == null)
+            return false;
+        return pat.matcher(email).matches();
     }
 }

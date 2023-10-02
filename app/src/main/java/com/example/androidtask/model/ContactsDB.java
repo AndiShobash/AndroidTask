@@ -5,7 +5,7 @@ import android.content.Context;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
-
+/************************************************ Creating the database for Contacts**********************************************************/
 @Database(entities = {Contacts.class},version = 1)
 public abstract class ContactsDB extends RoomDatabase {
     private static ContactsDB instance;
